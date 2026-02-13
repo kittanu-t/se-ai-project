@@ -1,7 +1,217 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "bootstrap/dist/css/bootstrap.min.css";
 
-[x-cloak] {
-    display: none;
+:root{
+    --bg-foundation:#F4F6F8;
+    --txt-main:#212529;
+    --txt-secondary:#6C757D;
+    --act-red:#E54D42;
+    --accent-yellow:#FFB900;
 }
+.navbar{ background:#fff; border-bottom:1px solid #E9ECEF; height: 75px;}
+.navbar .nav-link{ color:var(--txt-main); }
+.navbar .nav-link:hover{ color:#000; }
+.navbar .nav-link.active{
+    color:#000;
+    position:relative;
+    font-weight:600;
+}
+.navbar .nav-link.active::after{
+    content:"";
+    position:absolute; left:0; right:0; bottom:-6px; height:3px;
+    background:var(--act-red); border-radius:3px;
+}
+
+.btn-primary{
+    background:var(--act-red) !important;
+    border-color:var(--act-red) !important;
+}
+.btn-primary:hover{ filter:brightness(0.95); }
+
+/* ปุ่ม Logout = แดงตามธีม */
+.btn-logout{
+    background:var(--act-red) !important;
+    border-color:var(--act-red) !important;
+    color:#fff !important;
+}
+.btn-logout:hover{ filter:brightness(0.95); }
+
+.badge-accent{ background:var(--accent-yellow); color:var(--txt-main); }
+.text-secondary{ color:var(--txt-secondary) !important; }
+.shadow-soft{ box-shadow:0 4px 14px rgba(33,37,41,.06); }
+.alert-border{ border-left:4px solid var(--act-red); }
+main{ min-height: calc(100vh - 72px); }
+
+/* กระดิ่งแจ้งเตือน */
+.bell-btn{
+    position:relative; background:#fff; border:1px solid #E9ECEF;
+    transition:transform .15s ease, box-shadow .15s ease;
+}
+.bell-btn:hover{ transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,.06); }
+.bell-badge{
+    position:absolute; top:-6px; right:-6px; min-width:18px; height:18px;
+    font-size:11px; border-radius:999px; background:#dc3545; color:#fff;
+    display:flex; align-items:center; justify-content:center; padding:0 4px;
+}
+.notif-panel{
+    width:22rem; background:#fff; border:1px solid #E9ECEF; border-radius:.5rem;
+}
+
+/* แบนด์ไม่ให้คลิก (ใช้เมื่อเป็น Staff/Admin – ใส่ด้วย JS ฝั่งหน้า) */
+.brand-disabled{
+    pointer-events:none; cursor:default; 
+}
+:root{
+    --bg-foundation:#F4F6F8;
+    --txt-main:#212529;
+    --txt-secondary:#6C757D;
+    --act-red:#E54D42;
+    --accent-yellow:#FFB900;
+}
+body{ background:var(--bg-foundation); color:var(--txt-main); }
+.card-soft{ border:1px solid #E9ECEF; border-radius:.75rem; box-shadow:0 4px 14px rgba(33,37,41,.06); }
+.page-title{ color:var(--txt-main); }
+.text-secondary{ color:var(--txt-secondary)!important; }
+.btn-primary{ background:var(--act-red)!important; border-color:var(--act-red)!important; }
+.btn-primary:hover{ filter:brightness(0.95); }
+.btn-cancel{ background:var(--act-red)!important; border:none; color:#fff!important; border-radius:.5rem; padding:.4rem .9rem; font-size:.875rem; }
+.btn-cancel:hover{ filter:brightness(0.9); }
+/* สถานะ booking */
+.status{
+display:inline-block;
+padding:.3rem .75rem;
+border-radius:999px;
+font-size:.8rem;
+font-weight:600;
+}
+.status-pending{ background:#FFB900 !important; color:#212529 !important; }
+.status-approved{ background:#28a745 !important; color:#fff !important; }
+.status-cancelled{ background:#dc3545 !important; color:#fff !important; }
+.status-completed{ background:#0d6efd !important; color:#fff !important; }
+
+:root{
+    --bg-foundation:#F4F6F8;
+    --txt-main:#212529;
+    --txt-secondary:#6C757D;
+    --act-red:#E54D42;
+    --accent-yellow:#FFB900;
+}
+body{ background:var(--bg-foundation); }
+.page-title{ color:var(--txt-main); }
+.form-control{ border-radius:.5rem; padding:.65rem .9rem; }
+.btn-primary{ background:var(--act-red)!important; border-color:var(--act-red)!important; }
+.btn-primary:hover{ filter:brightness(0.95); }
+.card-soft{ border:1px solid #E9ECEF; border-radius:.75rem; box-shadow:0 4px 14px rgba(33,37,41,.06); }
+.announcement-meta{ color:var(--txt-secondary); font-size:.875rem; }
+.badge-accent{ background:var(--accent-yellow); color:var(--txt-main); }
+  :root{
+    --bg-foundation:#F4F6F8; --txt-main:#212529; --txt-secondary:#6C757D;
+    --act-red:#E54D42; --accent-yellow:#FFB900;
+  }
+  body{ background:var(--bg-foundation); }
+  .card-soft{ border:1px solid #E9ECEF; border-radius:.75rem; box-shadow:0 4px 14px rgba(33,37,41,.06); }
+  .page-title{ color:var(--txt-main); }
+  .text-secondary{ color:var(--txt-secondary)!important; }
+  .btn-primary{ background:var(--act-red)!important; border-color:var(--act-red)!important; }
+  .btn-primary:hover{ filter:brightness(0.95); }
+  .badge-accent{ background:var(--accent-yellow); color:var(--txt-main); }
+  .legend-dot{ display:inline-block; width:.75rem; height:.75rem; border-radius:999px; margin-right:.4rem; vertical-align:middle; }
+  :root{
+      --bg-foundation:#F4F6F8;
+      --txt-main:#212529;
+      --txt-secondary:#6C757D;
+      --act-red:#E54D42;
+      --accent-yellow:#FFB900;
+  }
+  body{ background:var(--bg-foundation); color:var(--txt-main); }
+  .card-soft{ border:1px solid #E9ECEF; border-radius:.75rem; box-shadow:0 4px 14px rgba(33,37,41,.06); }
+  .page-title{ color:var(--txt-main); }
+  .text-secondary{ color:var(--txt-secondary)!important; }
+  .btn-primary{ background:var(--act-red)!important; border-color:var(--act-red)!important; }
+  .btn-primary:hover{ filter:brightness(0.95); }
+  .btn-outline-secondary:hover{ background:#E9ECEF; }
+  .badge-accent{ background:var(--accent-yellow); color:var(--txt-main); }
+  /* สีสถานะ */
+  .badge-available{ background:#28a745!important; color:#fff!important; }
+  .badge-unavailable{ background:var(--act-red)!important; color:#fff!important; }
+    :root{
+    --bg-foundation:#F4F6F8;
+    --txt-main:#212529;
+    --txt-secondary:#6C757D;
+    --act-red:#E54D42;
+    --accent-yellow:#FFB900;
+  }
+  .card-soft{ border:1px solid #E9ECEF; border-radius:.75rem; box-shadow:0 4px 14px rgba(33,37,41,.06); }
+  .section-title{ color:var(--txt-main); }
+  .text-secondary{ color:var(--txt-secondary)!important; }
+  .btn-primary{ background:var(--act-red)!important; border-color:var(--act-red)!important; }
+  .btn-primary:hover{ filter:brightness(0.95); }
+  .form-control, .form-select{ border-radius:.5rem; padding:.7rem 1rem; }
+  .form-label{ font-weight:500; color:var(--txt-main); }
+  .legend-dot{ display:inline-block; width:.75rem; height:.75rem; border-radius:999px; margin-right:.4rem; vertical-align:middle; }
+    :root{
+    --bg-foundation:#F4F6F8;
+    --txt-main:#212529;
+    --txt-secondary:#6C757D;
+    --act-red:#E54D42;
+    --accent-yellow:#FFB900;
+  }
+  .card-soft{ border:1px solid #E9ECEF; border-radius:.75rem; box-shadow:0 6px 20px rgba(33,37,41,.06); }
+  .section-title{ color:var(--txt-main); }
+  .text-secondary{ color:var(--txt-secondary)!important; }
+  .btn-primary{ background:var(--act-red)!important; border-color:var(--act-red)!important; }
+  .btn-primary:hover{ filter:brightness(0.95); }
+  .form-control{ border-radius:.5rem; padding:.7rem 1rem; }
+  .form-label{ font-weight:500; color:var(--txt-main); }
+    :root{
+      --bg-foundation:#F4F6F8;
+      --txt-main:#212529;
+      --txt-secondary:#6C757D;
+      --act-red:#E54D42;
+      --accent-yellow:#FFB900;
+  }
+  body{ background:var(--bg-foundation); }
+  .page-title{ color:var(--txt-main); }
+  .announcement-meta{ color:var(--txt-secondary); font-size:.9rem; }
+  .btn-primary{ background:var(--act-red)!important; border-color:var(--act-red)!important; }
+  .btn-primary:hover{ filter:brightness(0.95); }
+  .card-soft{ border:1px solid #E9ECEF; border-radius:.75rem; box-shadow:0 4px 14px rgba(33,37,41,.06); }
+          :root{
+            --bg-foundation:#F4F6F8; /* พื้นหลังหลัก */
+            --txt-main:#212529;      /* ข้อความหลัก */
+            --txt-secondary:#6C757D; /* ข้อความรอง */
+            --act-red:#E54D42;       /* ปุ่มหลัก/CTA */
+            --accent-yellow:#FFB900; /* badge/ลิงก์เน้น */
+        }
+        html,body{ height:100%; }
+        body{
+            background:var(--bg-foundation);
+            color:var(--txt-main);
+            font-family:'Figtree',sans-serif;
+        }
+        /* ปุ่มหลักใช้แดงตามไกด์ */
+        .btn-primary{
+            background:var(--act-red) !important;
+            border-color:var(--act-red) !important;
+        }
+        .btn-primary:hover{ filter:brightness(0.95); }
+
+        /* Card / Shadow มาตรฐาน */
+        .shadow-soft{ box-shadow:0 6px 20px rgba(33,37,41,.08); }
+
+        /* ยูทิลิตี้สำหรับหน้า auth ที่ยังอยากจัดกลางแบบเก่า (ถ้าหน้าไหนต้องการ) */
+        .auth-center{
+            min-height:100vh;
+            display:flex; align-items:center; justify-content:center;
+        }
+        .auth-card{
+            max-width:420px; width:100%;
+            background:#fff; border:1px solid #E9ECEF; border-radius:.75rem;
+            padding:2rem;
+        }
+
+        /* ฟอร์มสัมผัสนุ่มขึ้นเล็กน้อย */
+        .form-control{ border-radius:.5rem; padding:.75rem 1rem; }
+        .form-label{ font-weight:500; }
+        .text-secondary{ color:var(--txt-secondary) !important; }
+        .badge-accent{ background:var(--accent-yellow); color:var(--txt-main); }
+
