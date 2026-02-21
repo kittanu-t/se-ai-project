@@ -33,5 +33,9 @@ class SportsField extends Model
     { 
         return $this->hasMany(FieldUnit::class); 
     }
+    public function reviews(): HasMany
+    {
+    return $this->hasMany(Review::class);
+    }
 
 }
