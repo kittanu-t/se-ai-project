@@ -70,6 +70,14 @@ Route::middleware(['auth', 'active', 'verified'])->group(function () {
         Route::post('/bookings',        [BookingController::class, 'store'])->name('bookings.store');
         Route::delete('/bookings/{id}', [BookingController::class, 'destroy'])->name('bookings.destroy');
 
+        // ✅ Review Route (ใส่ตรงนี้)
+        Route::post('/bookings/{booking}/review',
+            [\App\Http\Controllers\ReviewController::class, 'store']
+        )->name('bookings.review.store');
+        Route::get('/bookings/{booking}/review',
+            [\App\Http\Controllers\ReviewController::class, 'create']
+        )->name('bookings.review.create');
+
         // Account
         Route::get('/account',          [AccountController::class, 'show'])->name('account.show');
         Route::put('/account',          [AccountController::class, 'update'])->name('account.update');

@@ -15,11 +15,12 @@ class BookingController extends Controller
 {
     public function index()
     {
-        $bookings = Booking::with(['sportsField', 'unit'])
+        $bookings = Booking::with(['sportsField', 'unit','review'])
             ->where('user_id', auth()->id())
             ->orderByDesc('date')
             ->orderBy('start_time')
-            ->paginate(15);
+            ->latest()
+            ->paginate(10);
 
         return view('user.bookings.index', compact('bookings'));
     }
