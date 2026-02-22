@@ -1,44 +1,50 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
+from flask import Flask, request, jsonify
 from transformers import pipeline
-import uvicorn
 
-app = FastAPI()
+app = Flask(__name__)
 
-# โหลดโมเดลครั้งเดียว (สำคัญมาก ⚠️)
+#  โหลดโมเดลครั้งเดียว 
 model_name = "Thaweewat/wangchanberta-hyperopt-sentiment-01"
+
 classifier = pipeline(
     "sentiment-analysis",
     model=model_name,
     tokenizer=model_name
 )
 
-class TextInput(BaseModel):
-    text: str
+label_map = {
+    "LABEL_0": "negative",
+    "LABEL_1": "positive",
+    "LABEL_2": "neutral"
+}
 
 
-@app.post("/analyze")
-def analyze(data: TextInput):
+@app.route("/analyze", methods=["POST"])
+def analyze():
 
-    result = classifier(data.text)[0]
+    data = request.get_json()
 
-    label_map = {
-        "LABEL_0": "negative",
-        "LABEL_1": "positive",
-        "LABEL_2": "neutral"
-    }
+    if not data or "text" not in data:
+        return jsonify({
+            "status": "error",
+            "message": "No text provided"
+        }), 400
 
-    return {
+    text = data["text"]
+
+    result = classifier(text)[0]
+
+    return jsonify({
         "status": "success",
         "label": label_map.get(result["label"]),
         "score": float(result["score"])
-    }
+    })
 
 
+#  กำหนด port ตรงนี้เลย
 if __name__ == "__main__":
-    uvicorn.run(
-        "sentiment_ai:app",
+    app.run(
         host="127.0.0.1",
-        port=8001,        
-        reload=True
+        port=8001,
+        debug=True
     )
