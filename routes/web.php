@@ -7,6 +7,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\FieldPublicController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\AnnouncementPublicController;
+use App\Http\Controllers\ReviewController;
 
 use App\Http\Controllers\Staff\BookingController as StaffBookingController;
 use App\Http\Controllers\Staff\FieldController   as StaffFieldController;
@@ -40,6 +41,8 @@ Route::get('/', function () {
 Route::get('/fields', [FieldPublicController::class, 'index'])->name('fields.index');
 // หน้าสนามใหญ่ + เลือกคอร์ต + ปฏิทิน
 Route::get('/fields/{field}', [FieldPublicController::class, 'show'])->name('fields.show');
+
+Route::get('/fields/{field}/reviews', [ReviewController::class,'fieldReviews'])->name('fields.reviews');
 
 // JSON: รายการคอร์ตของสนาม (ใช้ตอนหน้า Create Booking)
 Route::get('/api/fields/{field}/units', function (SportsField $field) {

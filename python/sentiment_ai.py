@@ -1,35 +1,44 @@
-import sys
-import json
-import os
+from fastapi import FastAPI
+from pydantic import BaseModel
 from transformers import pipeline
+import uvicorn
 
-# ปิด Warning
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+app = FastAPI()
 
-def analyze():
-    try:
-        if len(sys.argv) < 2:
-            print(json.dumps({"status": "error", "message": "No text"}))
-            return
+# โหลดโมเดลครั้งเดียว (สำคัญมาก ⚠️)
+model_name = "Thaweewat/wangchanberta-hyperopt-sentiment-01"
+classifier = pipeline(
+    "sentiment-analysis",
+    model=model_name,
+    tokenizer=model_name
+)
 
-        text = sys.argv[1]
-        # ใช้โมเดล WangchanBERTa ที่คุณเลือก
-        model_name = "Thaweewat/wangchanberta-hyperopt-sentiment-01"
-        classifier = pipeline("sentiment-analysis", model=model_name, tokenizer=model_name)
+class TextInput(BaseModel):
+    text: str
 
-        result = classifier(text)[0]
 
-        # แปลง Label จากโมเดลเป็นคำอ่านง่าย
-        label_map = {"LABEL_0": "negative", "LABEL_1": "positive", "LABEL_2": "neutral"}
-        final_label = label_map.get(result['label'], result['label'])
+@app.post("/analyze")
+def analyze(data: TextInput):
 
-        print(json.dumps({
-            "status": "success",
-            "label": final_label,
-            "score": float(result['score'])
-        }))
-    except Exception as e:
-        print(json.dumps({"status": "error", "message": str(e)}))
+    result = classifier(data.text)[0]
+
+    label_map = {
+        "LABEL_0": "negative",
+        "LABEL_1": "positive",
+        "LABEL_2": "neutral"
+    }
+
+    return {
+        "status": "success",
+        "label": label_map.get(result["label"]),
+        "score": float(result["score"])
+    }
+
 
 if __name__ == "__main__":
-    analyze()
+    uvicorn.run(
+        "sentiment_ai:app",
+        host="127.0.0.1",
+        port=8001,        
+        reload=True
+    )

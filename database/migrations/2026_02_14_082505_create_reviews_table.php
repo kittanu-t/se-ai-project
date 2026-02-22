@@ -30,8 +30,9 @@ return new class extends Migration
         $table->unsignedTinyInteger('rating'); // 1–5
         $table->text('comment');
 
-        $table->enum('sentiment', ['positive','neutral','negative']);
-        $table->decimal('confidence_score', 5, 4);
+        $table->enum('sentiment', ['positive','neutral','negative'])->nullable();
+
+        $table->decimal('confidence_score', 5, 4)->nullable();
 
         $table->timestamps();
 
