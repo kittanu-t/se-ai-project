@@ -1,35 +1,50 @@
-import sys
-import json
-import os
+from flask import Flask, request, jsonify
 from transformers import pipeline
 
-# ปิด Warning
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+app = Flask(__name__)
 
+#  โหลดโมเดลครั้งเดียว 
+model_name = "Thaweewat/wangchanberta-hyperopt-sentiment-01"
+
+classifier = pipeline(
+    "sentiment-analysis",
+    model=model_name,
+    tokenizer=model_name
+)
+
+label_map = {
+    "LABEL_0": "negative",
+    "LABEL_1": "positive",
+    "LABEL_2": "neutral"
+}
+
+
+@app.route("/analyze", methods=["POST"])
 def analyze():
-    try:
-        if len(sys.argv) < 2:
-            print(json.dumps({"status": "error", "message": "No text"}))
-            return
 
-        text = sys.argv[1]
-        # ใช้โมเดล WangchanBERTa ที่คุณเลือก
-        model_name = "Thaweewat/wangchanberta-hyperopt-sentiment-01"
-        classifier = pipeline("sentiment-analysis", model=model_name, tokenizer=model_name)
+    data = request.get_json()
 
-        result = classifier(text)[0]
+    if not data or "text" not in data:
+        return jsonify({
+            "status": "error",
+            "message": "No text provided"
+        }), 400
 
-        # แปลง Label จากโมเดลเป็นคำอ่านง่าย
-        label_map = {"LABEL_0": "negative", "LABEL_1": "positive", "LABEL_2": "neutral"}
-        final_label = label_map.get(result['label'], result['label'])
+    text = data["text"]
 
-        print(json.dumps({
-            "status": "success",
-            "label": final_label,
-            "score": float(result['score'])
-        }))
-    except Exception as e:
-        print(json.dumps({"status": "error", "message": str(e)}))
+    result = classifier(text)[0]
 
+    return jsonify({
+        "status": "success",
+        "label": label_map.get(result["label"]),
+        "score": float(result["score"])
+    })
+
+
+#  กำหนด port ตรงนี้เลย
 if __name__ == "__main__":
-    analyze()
+    app.run(
+        host="127.0.0.1",
+        port=8001,
+        debug=True
+    )

@@ -80,18 +80,32 @@
                     @endswitch
                   </td>
                   <td class="text-center">
-                    <a href="{{ route('fields.show', $f->id) }}" class="btn btn-outline-secondary btn-sm">
+
+                    {{-- ดูปฏิทิน --}}
+                    <a href="{{ route('fields.show', $f->id) }}"
+                      class="btn btn-outline-secondary btn-sm">
                       ดูปฏิทิน
+                    </a>
+
+                    {{-- ดูรีวิว --}}
+                    <a href="{{ route('fields.reviews', $f->id) }}"
+                      class="btn btn-warning btn-sm ms-1">
+                      ดูรีวิว
                     </a>
 
                     @auth
                       @if(auth()->user()->role === 'user')
-                        <a href="{{ route('bookings.create', ['field_id' => $f->id, 'field_name' => $f->name]) }}" 
+                        {{-- จองสนาม --}}
+                        <a href="{{ route('bookings.create', [
+                              'field_id' => $f->id,
+                              'field_name' => $f->name
+                            ]) }}"
                           class="btn btn-primary btn-sm ms-1">
-                          จองสนามนี้
+                          จองสนาม
                         </a>
                       @endif
                     @endauth
+
                   </td>
                 </tr>
               @empty
