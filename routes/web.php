@@ -11,6 +11,7 @@ use App\Http\Controllers\ReviewController;
 
 use App\Http\Controllers\Staff\BookingController as StaffBookingController;
 use App\Http\Controllers\Staff\FieldController   as StaffFieldController;
+use App\Http\Controllers\Staff\ReviewController  as StaffReviewController;
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserController        as AdminUserController;
@@ -89,6 +90,13 @@ Route::middleware(['auth', 'active', 'verified'])->group(function () {
 
     // STAFF
     Route::prefix('staff')->name('staff.')->middleware('staff')->group(function () {
+        // Reviews (Negative sentiment)
+        Route::get('/reviews', [StaffReviewController::class, 'index'])
+            ->name('reviews.index');
+
+        Route::get('/reviews/{review}', [StaffReviewController::class, 'show'])
+            ->name('reviews.show');
+
         // คิวคำขอจอง
         Route::get('/bookings',               [StaffBookingController::class, 'index'])->name('bookings.index');
         Route::post('/bookings/{id}/approve', [StaffBookingController::class, 'approve'])->name('bookings.approve');

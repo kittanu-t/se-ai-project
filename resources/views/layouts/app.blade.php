@@ -70,6 +70,7 @@
                     @if(auth()->user()->role === 'staff')
                         <li class="nav-item"><a class="nav-link" href="{{ route('staff.bookings.index') }}">Requests</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('staff.fields.index') }}">My Fields</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('staff.reviews.index') }}">Reviews</a></li>
                     @endif
 
                     @if(auth()->user()->role === 'admin')
