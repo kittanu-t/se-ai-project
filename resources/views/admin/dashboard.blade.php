@@ -66,7 +66,88 @@
                 <p>{{ $utilization }} bookings/field (avg over 30 days)</p>
             </div>
 
+            {{-- แจ๊คเพิ่ม========================================= --}}
+            {{-- AI Sentiment Statistics --}}
+            {{-- ========================================= --}}
+            <div class="card p-4 shadow-sm rounded-4 mb-4">
+
+                <h3 class="mb-3">AI Review Sentiment Statistics</h3>
+
+                <ul class="list-group">
+
+                    <li class="list-group-item d-flex justify-content-between">
+                        Positive
+                        <span class="badge bg-success">
+                            {{ $sentimentStats['positive'] ?? 0 }}
+                        </span>
+                    </li>
+
+                    <li class="list-group-item d-flex justify-content-between">
+                        Neutral
+                        <span class="badge bg-secondary">
+                            {{ $sentimentStats['neutral'] ?? 0 }}
+                        </span>
+                    </li>
+
+                    <li class="list-group-item d-flex justify-content-between">
+                        Negative
+                        <span class="badge bg-danger">
+                            {{ $sentimentStats['negative'] ?? 0 }}
+                        </span>
+                    </li>
+
+                </ul>
+
+            </div>
+
+            {{-- ========================================= --}}
+            {{-- Most Negative Fields --}}
+            {{-- ========================================= --}}
+            <div class="card p-4 shadow-sm rounded-4 mb-4">
+
+                <h3 class="mb-3">Fields with Most Negative Reviews</h3>
+
+                <table class="table table-striped">
+
+                    <thead>
+                        <tr>
+                            <th>Field</th>
+                            <th>Negative Reviews</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach($negativeFields as $field)
+
+                        <tr>
+                            <td>{{ $field->sportsField->name ?? '-' }}</td>
+                            <td>{{ $field->total }}</td>
+                        </tr>
+
+                        @endforeach
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {{-- ========================================= --}}
+            {{-- AI Summary Report --}}
+            {{-- ========================================= --}}
+            <div class="card p-4 shadow-sm rounded-4 mb-4">
+
+                <h3 class="mb-3">AI Review Summary</h3>
+
+                <p>
+                    {{ $summary }}
+                </p>
+
+            </div>
+
         </div>
     </div>
+
 </div>
 @endsection
