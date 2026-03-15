@@ -140,3 +140,22 @@ Route::middleware(['auth', 'active', 'verified'])->group(function () {
         });
     });
 });
+// Debug route — ลบทิ้งหลังทดสอบเสร็จ
+Route::get('/debug-flask', function () {
+    try {
+        $response = \Illuminate\Support\Facades\Http::timeout(5)
+            ->post(env('FLASK_API_URL') . '/analyze', [
+                'text' => 'สนามดีมาก'
+            ]);
+        return response()->json([
+            'flask_url' => env('FLASK_API_URL'),
+            'status' => $response->status(),
+            'body' => $response->json(),
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'flask_url' => env('FLASK_API_URL'),
+            'error' => $e->getMessage(),
+        ]);
+    }
+});
