@@ -50,13 +50,13 @@
                         </label>
                     </div>
 
-                    <div class="d-flex align-items-center justify-content-between mt-4">
+                    <!-- <div class="d-flex align-items-center justify-content-between mt-4">
                         @if (Route::has('password.request'))
                             <a class="text-decoration-none small" href="{{ route('password.request') }}"
                                style="color:#6C757D;">
                                 {{ __('Forgot your password?') }}
                             </a>
-                        @endif
+                        @endif -->
 
                         <x-button class="btn btn-primary border-0 px-4 py-2 fw-semibold"
                                   style="background:#E54D42;border-radius:.5rem;">
