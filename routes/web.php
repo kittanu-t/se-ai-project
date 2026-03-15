@@ -68,13 +68,12 @@ Route::middleware(['auth', 'active', 'verified'])->group(function () {
     Route::get('/announcements/{announcement}', [AnnouncementPublicController::class, 'show'])->name('user.announcements.show');
 
     // USER
-    Route::middleware('user')->group(function () {
+    Route::middleware(['auth', 'user'])->group(function () {
         Route::get('/bookings',         [BookingController::class, 'index'])->name('bookings.index');
         Route::get('/bookings/create',  [BookingController::class, 'create'])->name('bookings.create');
         Route::post('/bookings',        [BookingController::class, 'store'])->name('bookings.store');
         Route::delete('/bookings/{id}', [BookingController::class, 'destroy'])->name('bookings.destroy');
 
-        // ✅ Review Route (ใส่ตรงนี้)
         Route::post('/bookings/{booking}/review',
             [\App\Http\Controllers\ReviewController::class, 'store']
         )->name('bookings.review.store');
