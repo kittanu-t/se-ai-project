@@ -47,8 +47,9 @@ class ReviewController extends Controller
 
         try {
 
+            $flaskUrl = env('FLASK_API_URL', 'http://127.0.0.1:8001');
             $response = Http::timeout(10)
-                ->post('http://127.0.0.1:8001/analyze', [
+                ->post($flaskUrl . '/analyze', [
                     'text' => $validated['comment']
                 ]);
 

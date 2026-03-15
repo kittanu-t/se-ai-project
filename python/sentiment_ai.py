@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from transformers import pipeline
+import os
 
 app = Flask(__name__)
 
@@ -41,10 +42,5 @@ def analyze():
     })
 
 
-#  กำหนด port ตรงนี้เลย
-if __name__ == "__main__":
-    app.run(
-        host="127.0.0.1",
-        port=8001,
-        debug=True
-    )
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8001)), debug=False)

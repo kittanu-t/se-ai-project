@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+
+  # ── Laravel (PHP + Nginx) ──────────────────────────────
+  laravel:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      APP_NAME: "${APP_NAME:-SE AI Project}"
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_KEY: "${APP_KEY}"
+      APP_URL: "${APP_URL:-http://localhost:8000}"
+
+      # Database → ชี้ไปที่ service 'mysql' ใน network เดียวกัน
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: "${DB_DATABASE:-se_ai_db}"
+      DB_USERNAME: "${DB_USERNAME:-seuser}"
+      DB_PASSWORD: "${DB_PASSWORD:-secret}"
+
+      # Flask AI URL → ชี้ไปที่ service 'flask'
+      FLASK_API_URL: "http://flask:8001"
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+      flask:
+        condition: service_started
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  # ── Python Flask AI Backend ────────────────────────────
+  flask:
+    build:
+      context: ./python
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    environment:
+      FLASK_ENV: production
+      FLASK_DEBUG: "0"
+      # HuggingFace model cache path
+      TRANSFORMERS_CACHE: /app/.cache/huggingface
+      HF_HOME: /app/.cache/huggingface
+    volumes:
+      # Cache โมเดล HuggingFace ไม่ต้อง download ใหม่ทุกครั้ง restart
+      - hf_cache:/app/.cache/huggingface
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  # ── MySQL Database ─────────────────────────────────────
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD:-secret}"
+      MYSQL_DATABASE: "${DB_DATABASE:-se_ai_db}"
+      MYSQL_USER: "${DB_USERNAME:-seuser}"
+      MYSQL_PASSWORD: "${DB_PASSWORD:-secret}"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - app-network
+
+volumes:
+  mysql_data:
+  hf_cache:      # สำหรับ cache โมเดล HuggingFace / transformers
+
+networks:
+  app-network:
+    driver: bridge
