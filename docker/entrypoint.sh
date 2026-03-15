@@ -17,6 +17,7 @@ done
 # Run migrations automatically
 echo "==> Running migrations..."
 php artisan migrate --force --no-interaction
+db:seed --class=InitialTestDataSeeder --force --no-interaction
 
 # Fix permissions
 chown -R www-data:www-data /var/www/html/storage

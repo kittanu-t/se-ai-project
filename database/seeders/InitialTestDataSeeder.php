@@ -14,7 +14,7 @@ class InitialTestDataSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
         // ================= USERS =================
-        DB::table('users')->insert([
+        DB::table('users')->insertOrIgnore([
             [
                 'id' => 1,
                 'name' => 'Super Admin',
@@ -73,7 +73,7 @@ class InitialTestDataSeeder extends Seeder
         ]);
 
         // ================= SPORTS FIELDS =================
-        DB::table('sports_fields')->insert([
+        DB::table('sports_fields')->insertOrIgnore([
             [
                 'id' => 1,
                 'name' => 'Main Court A',
@@ -119,7 +119,7 @@ class InitialTestDataSeeder extends Seeder
         ]);
 
         // ================= FIELD UNITS =================
-        DB::table('field_units')->insert([
+        DB::table('field_units')->insertOrIgnore([
             ['id'=>1,'sports_field_id'=>1,'name'=>'Court 1','index'=>1,'status'=>'available','capacity'=>1],
             ['id'=>2,'sports_field_id'=>1,'name'=>'Court 2','index'=>2,'status'=>'available','capacity'=>1],
             ['id'=>3,'sports_field_id'=>1,'name'=>'Court 3','index'=>3,'status'=>'available','capacity'=>1],
@@ -132,7 +132,7 @@ class InitialTestDataSeeder extends Seeder
         ]);
 
         // ================= ANNOUNCEMENTS =================
-        DB::table('announcements')->insert([
+        DB::table('announcements')->insertOrIgnore([
             [
                 'id'=>1,
                 'title'=>'ยินดีต้อนรับสู่ระบบจองสนาม',
@@ -156,7 +156,7 @@ class InitialTestDataSeeder extends Seeder
         ]);
 
         // ================= BOOKINGS =================
-        DB::table('bookings')->insert([
+        DB::table('bookings')->insertOrIgnore([
             [
                 'id'=>1,
                 'user_id'=>4,
@@ -176,7 +176,7 @@ class InitialTestDataSeeder extends Seeder
         ]);
 
         // ================= REVIEWS =================
-        DB::table('reviews')->insert([
+        DB::table('reviews')->insertOrIgnore([
             [
                 'id'=>1,
                 'booking_id'=>1,
