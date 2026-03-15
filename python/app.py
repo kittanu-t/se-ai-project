@@ -4,9 +4,7 @@ import os
 
 app = Flask(__name__)
 
-#  โหลดโมเดลครั้งเดียว 
 model_name = "Thaweewat/wangchanberta-hyperopt-sentiment-01"
-
 classifier = pipeline(
     "sentiment-analysis",
     model=model_name,
@@ -19,10 +17,8 @@ label_map = {
     "LABEL_2": "neutral"
 }
 
-
 @app.route("/analyze", methods=["POST"])
 def analyze():
-
     data = request.get_json()
 
     if not data or "text" not in data:
@@ -34,13 +30,20 @@ def analyze():
     text = data["text"]
 
     result = classifier(text)[0]
+    sentiment = label_map.get(result["label"])
+    score = float(result["score"])
+
+    THRESHOLD = 0.75
+    if score < THRESHOLD:
+        final_label = "neutral"
+    else:
+        final_label = sentiment
 
     return jsonify({
         "status": "success",
-        "label": label_map.get(result["label"]),
-        "score": float(result["score"])
+        "label": final_label,
+        "score": score
     })
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8001)), debug=False)
