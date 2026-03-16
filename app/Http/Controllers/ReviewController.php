@@ -39,48 +39,50 @@ class ReviewController extends Controller
         }
 
         // =====================================================
-        // ✅ 3️⃣ เรียก Sentiment AI API (FastAPI)
+        // 3️⃣ สร้าง Review ก่อนเลย (ไม่รอ AI)
+        // sentiment เริ่มต้นเป็น 'pending' ก่อน
         // =====================================================
 
-        $sentiment = 'neutral';
-        $confidence = 0.0000;
-
-        try {
-
-            $flaskUrl = env('FLASK_API_URL', 'http://127.0.0.1:8001');
-            $response = Http::timeout(60)
-                ->post($flaskUrl . '/analyze', [
-                    'text' => $validated['comment']
-                ]);
-
-            if ($response->successful()) {
-
-                $data = $response->json();
-
-                if (isset($data['status']) && $data['status'] === 'success') {
-                    $sentiment  = $data['label'];
-                    $confidence = $data['score'];
-                }
-            }
-
-        } catch (\Exception $e) {
-            // ถ้า AI ล่ม → ไม่ให้เว็บพัง
-            logger()->error('Sentiment API error: '.$e->getMessage());
-        }
-
-        // =====================================================
-        // 4️⃣ สร้าง Review
-        // =====================================================
-
-        Review::create([
-            'booking_id' => $booking->id,
-            'user_id' => $user->id,
-            'sports_field_id' => $booking->sports_field_id,
-            'rating' => $validated['rating'],
-            'comment' => $validated['comment'],
-            'sentiment' => $sentiment,
-            'confidence_score' => $confidence,
+        $review = Review::create([
+            'booking_id'       => $booking->id,
+            'user_id'          => $user->id,
+            'sports_field_id'  => $booking->sports_field_id,
+            'rating'           => $validated['rating'],
+            'comment'          => $validated['comment'],
+            'sentiment'        => 'pending',
+            'confidence_score' => 0.0000,
         ]);
+
+        // =====================================================
+        // 4️⃣ เรียก Sentiment AI หลัง response ส่งกลับ user แล้ว
+        // user ไม่ต้องรอ — sentiment จะอัพเดตใน background
+        // =====================================================
+
+        dispatch(function () use ($review) {
+            try {
+                $flaskUrl = env('FLASK_API_URL', 'http://127.0.0.1:8001');
+
+                $response = Http::timeout(120)
+                    ->post($flaskUrl . '/analyze', [
+                        'text' => $review->comment,
+                    ]);
+
+                if ($response->successful()) {
+                    $data = $response->json();
+
+                    if (isset($data['status']) && $data['status'] === 'success') {
+                        $review->update([
+                            'sentiment'        => $data['label'],
+                            'confidence_score' => $data['score'],
+                        ]);
+                    }
+                }
+
+            } catch (\Exception $e) {
+                // ถ้า AI ล่ม → sentiment ยังคงเป็น 'pending'
+                logger()->error('Sentiment API error: ' . $e->getMessage());
+            }
+        })->afterResponse();
 
         return redirect()
             ->route('bookings.index')
@@ -139,7 +141,7 @@ class ReviewController extends Controller
             ")
             ->where('sports_field_id', $fieldId)
             ->groupBy('sentiment')
-            ->pluck('total','sentiment');
+            ->pluck('total', 'sentiment');
 
         return view('fields.reviews', compact(
             'field',
