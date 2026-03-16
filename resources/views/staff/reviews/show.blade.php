@@ -27,52 +27,64 @@
     cursor: pointer;
   }
   .btn-yellow { background: #f9d71c; color: #000; }
+  .field-badge {
+    display: inline-block;
+    background: #f0f4ff;
+    color: #3b5bdb;
+    border-radius: 6px;
+    padding: 2px 10px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-left: 8px;
+  }
 </style>
 
-<h1>Review Detail</h1>
+<h1>
+  Review Detail
+  {{-- ✅ แสดงชื่อสนามที่ review นี้ผูกอยู่ --}}
+  @if($review->sportsField)
+    <span class="field-badge">🏟 {{ $review->sportsField->name }}</span>
+  @endif
+</h1>
 
 <div class="card">
 
-<p>
-<strong>Review:</strong><br>
-{{ $review->comment }}
-</p>
+  <p>
+    <strong>Review:</strong><br>
+    {{ $review->comment }}
+  </p>
 
-<br>
+  <br>
 
-<p>
-<strong>Rating:</strong><br>
-
-@for ($i = 1; $i <= 5; $i++)
-    @if ($i <= $review->rating)
+  <p>
+    <strong>Rating:</strong><br>
+    @for ($i = 1; $i <= 5; $i++)
+      @if ($i <= $review->rating)
         ⭐
-    @else
+      @else
         ☆
+      @endif
+    @endfor
+  </p>
+
+  <br>
+
+  <p>
+    <strong>Sentiment:</strong>
+    @if($review->sentiment == 'negative')
+      <span style="color:#e63946;font-weight:600;">Negative</span>
+    @elseif($review->sentiment == 'positive')
+      <span style="color:#2a9d8f;font-weight:600;">Positive</span>
+    @else
+      <span style="color:#555;">Neutral</span>
     @endif
-@endfor
+  </p>
 
-</p>
+  <br>
 
-<br>
-
-<p>
-<strong>Sentiment:</strong>
-
-@if($review->sentiment == 'negative')
-    <span style="color:#e63946;font-weight:600;">Negative</span>
-@elseif($review->sentiment == 'positive')
-    <span style="color:#2a9d8f;font-weight:600;">Positive</span>
-@else
-    <span style="color:#555;">Neutral</span>
-@endif
-
-</p>
-
-<br>
-
-<a href="{{ route('staff.reviews.index') }}" class="btn btn-yellow">
-← Back
-</a>
+  <a href="{{ route('staff.reviews.index') }}" class="btn btn-yellow">
+    ← Back
+  </a>
 
 </div>
 

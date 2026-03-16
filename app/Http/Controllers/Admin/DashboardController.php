@@ -70,18 +70,16 @@ class DashboardController extends Controller
             ->get();
 
         // -------------------------------
-        // Summary Report
+        // Chart Data: Reviews per month (last 6 months)
         // -------------------------------
-        $totalReviews = Review::count();
-
-        $positive = $sentimentStats['positive'] ?? 0;
-        $neutral  = $sentimentStats['neutral'] ?? 0;
-        $negative = $sentimentStats['negative'] ?? 0;
-
-        $summary = "From $totalReviews reviews analyzed by AI, 
-        $positive reviews are positive, 
-        $neutral are neutral, 
-        and $negative are negative.";
+        $reviewsPerMonth = Review::select(
+                DB::raw("DATE_FORMAT(created_at, '%Y-%m') as month"),
+                DB::raw('count(*) as total')
+            )
+            ->where('created_at', '>=', Carbon::now()->subMonths(6))
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
 
         // -------------------------------
         // Send Data to View
@@ -96,7 +94,7 @@ class DashboardController extends Controller
             'utilization',
             'sentimentStats',
             'negativeFields',
-            'summary'
+            'reviewsPerMonth',
         ));
     }
 }

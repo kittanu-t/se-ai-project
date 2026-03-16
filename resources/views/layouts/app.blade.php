@@ -254,5 +254,6 @@ if (typeof window.Alpine === 'undefined') {
     });
 })();
 </script>
+@stack('scripts')
 </body>
 </html>

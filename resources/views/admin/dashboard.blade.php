@@ -134,20 +134,73 @@
             </div>
 
             {{-- ========================================= --}}
-            {{-- AI Summary Report --}}
+            {{-- AI Review Dashboard --}}
             {{-- ========================================= --}}
             <div class="card p-4 shadow-sm rounded-4 mb-4">
+                <h3 class="mb-4">AI Review Dashboard</h3>
 
-                <h3 class="mb-3">AI Review Summary</h3>
+                <div class="row g-4">
 
-                <p>
-                    {{ $summary }}
-                </p>
+                    {{-- Donut Chart: Sentiment --}}
+                    <div class="col-md-5">
+                        <h6 class="text-muted mb-3">Sentiment Breakdown</h6>
+                        <canvas id="sentimentDonut" height="220"></canvas>
+                    </div>
 
+                    {{-- Bar Chart: Reviews per Month --}}
+                    <div class="col-md-7">
+                        <h6 class="text-muted mb-3">Reviews per Month (last 6 months)</h6>
+                        <canvas id="reviewsBar" height="220"></canvas>
+                    </div>
+
+                </div>
             </div>
-
+            @push('scripts')
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script>
+            // ── Donut: Sentiment ──────────────────────────────────
+            new Chart(document.getElementById('sentimentDonut'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Positive', 'Neutral', 'Negative'],
+                datasets: [{
+                    data: [
+                        {{ $sentimentStats['positive'] ?? 0 }},
+                        {{ $sentimentStats['neutral']  ?? 0 }},
+                        {{ $sentimentStats['negative'] ?? 0 }},
+                    ],
+                    backgroundColor: ['#2a9d8f', '#adb5bd', '#e63946'],
+                    borderWidth: 2,
+                }]
+            },
+            options: {
+                plugins: { legend: { position: 'bottom' } },
+                cutout: '65%',
+            }
+            });
+            
+            // ── Bar: Reviews per Month ────────────────────────────
+            new Chart(document.getElementById('reviewsBar'), {
+            type: 'bar',
+            data: {
+                labels: {!! $reviewsPerMonth->pluck('month')->toJson() !!},
+                datasets: [{
+                    label: 'Reviews',
+                    data:  {!! $reviewsPerMonth->pluck('total')->toJson() !!},
+                    backgroundColor: '#4361ee',
+                    borderRadius: 6,
+                }]
+            },
+            options: {
+                scales: {
+                    y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                },
+                plugins: { legend: { display: false } }
+            }
+            });
+            </script>
+            @endpush
         </div>
     </div>
-
 </div>
 @endsection
